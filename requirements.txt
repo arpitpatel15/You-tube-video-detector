@@ -6,3 +6,5 @@ joblib
 scipy
 textstat
 gunicorn
+google-api-python-client
+isodate

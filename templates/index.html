@@ -20,7 +20,7 @@
             Paste a full YouTube URL below to analyze its metadata, text, and engagement using machine learning.
         </p>
 
-        <form method="POST" action="{{ url_for('predict') }}" class="p-4 border rounded shadow-sm">
+        <form method="POST" action="{{ url_for('handle_predict') }}" class="p-4 border rounded shadow-sm"></form>
             <div class="mb-3">
                 <label for="url" class="form-label">YouTube Video URL</label>
                 <input type="url" class="form-control" id="url" name="url" 
