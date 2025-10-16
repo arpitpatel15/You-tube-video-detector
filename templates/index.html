@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Enhanced Fake Video Detector</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container { max-width: 900px; margin-top: 50px; }
+        .form-label { font-weight: bold; }
+        textarea { resize: vertical; }
+        .result-box { margin-top: 30px; padding: 20px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Enhanced YouTube Fake Video Detector</h1>
+        <p class="text-center text-muted">Input the video metadata below to get a prediction on its authenticity.</p>
+
+        <form method="POST" class="p-4 border rounded shadow-sm">
+            <div class="mb-3">
+                <label for="title" class="form-label">Video Title</label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="e.g., You won't believe what happens next!" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description (First Paragraph)</label>
+                <textarea class="form-control" id="description" name="description" rows="3" placeholder="e.g., In this shocking new video, we expose the secret that doctors don't want you to know."></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="comments" class="form-label">Top Comments (Separate by newline or semicolon)</label>
+                <textarea class="form-control" id="comments" name="comments" rows="3" placeholder="e.g., This is fake news; Great tutorial! I learned a lot; time waste report kar do"></textarea>
+            </div>
+
+            <h5 class="mt-4 mb-3">Engagement & Metadata</h5>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label for="views" class="form-label">Views (e.g., 100k)</label>
+                    <input type="text" class="form-control" id="views" name="views" value="100000" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="likes" class="form-label">Likes (e.g., 500)</label>
+                    <input type="text" class="form-control" id="likes" name="likes" value="500" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="subscribers" class="form-label">Channel Subs (e.g., 1M)</label>
+                    <input type="text" class="form-control" id="subscribers" name="subscribers" value="1000000" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="duration" class="form-label">Duration (Seconds)</label>
+                    <input type="number" class="form-control" id="duration" name="duration" value="600" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-4 w-100">Predict Authenticity</button>
+        </form>
+
+        {% if result %}
+            <div class="result-box {{ result.result_class }}">
+                {% if result.verdict == 'ERROR' %}
+                    <h4 class="text-danger">Prediction Error ⚠️</h4>
+                    <p>{{ result.reasoning }}</p>
+                {% else %}
+                    <h4 class="mb-3">Verdict: <strong class="text-uppercase">{{ result.verdict }}</strong></h4>
+                    <p class="lead"><strong>Confidence:</strong> {{ result.confidence_score }} (Prob. Real: {{ result.probability_real }})</p>
+                    <p><strong>Reasoning:</strong> {{ result.reasoning }}.</p>
+                    
+                    <hr>
+
+                    <h6>Key Evidence:</h6>
+                    <ul class="list-unstyled">
+                        {% for item in result.key_evidence %}
+                            <li>• {{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                    
+                    <hr>
+                    
+                    <h6>Raw Input Metrics:</h6>
+                    <table class="table table-sm table-borderless">
+                        <tr><td>Title:</td><td>{{ result.raw_features.title }}</td></tr>
+                        <tr><td>Views:</td><td>{{ result.raw_features.views | int | to_string }}</td></tr>
+                        <tr><td>Likes:</td><td>{{ result.raw_features.likes | int | to_string }}</td></tr>
+                        <tr><td>Subscribers:</td><td>{{ result.raw_features.subscribers | int | to_string }}</td></tr>
+                    </table>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <footer class="text-center mt-5 mb-3 text-muted">
+            <p>Fake Video Detector powered by Gradient Boosting and Advanced Feature Engineering.</p>
+        </footer>
+    </div>
+    
+    {% macro to_string(value) %}{{ value | string }}{% endmacro %}
+</body>
+</html>
