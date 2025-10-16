@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "app.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "50mb",
+        "runtime": "python3.9"  // Python 3.9 is often safer for ML/Scikit-learn due to better library support
+      }
+    }
+  ],
+  "routes": [
+    // This routes the root path "/" and the prediction path "/predict" to the app.py function handler.
+    {
+      "src": "/(.*)",
+      "dest": "app.py"
+    }
+  ]
+}
